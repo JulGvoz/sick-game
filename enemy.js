@@ -6,34 +6,42 @@ class Slime {
     this.animationFrame = 1;
     this.type = "slime";
     this.animationTime = 0;
-    this.maxAnimationTime = [0, 5, 5, 4, 7, 4, 5];
+    this.maxAnimationTime = [0, 3, 3, 3, 3, 3, 3];
     this.width = 0.4;
     this.height = 0.4;
-    this.jumpCooldown = 10;
+    this.jumpCooldown = random(8, 16);
     this.currentJumpTimer = 0;
-    this.speed = 6 / fps;
+    this.speed = random(1.5, 4) / fps;
     this.death = false;
+
+    this.jumpDir = [0, 0];
+
+    this.isJumping = false;
   }
 
   control() {
+    // explosion control
     if (distance(player.x, player.y, this.x, this.y) < 0.35) {
       this.death = true;
       return [0, 0];
     }
-    if (this.currentJumpTimer < this.jumpCooldown) {
+
+
+    if (!this.isJumping) {
       this.currentJumpTimer += 30/fps;
-      return [0, 0];
-    } else {
-      this.isMoving = true
-      this.currentJumpTimer = 0;
-      var movementVector = [player.x - this.x, player.y - this.y];
-      // normalize movement
-      if (this.animationFrame >= 3 && this.animationFrame <= 5) {
-        return vectorMult(movementVector, 1 / vectorLength(movementVector));
-      } else {
-        return [0, 0];
+      if (this.currentJumpTimer >= this.jumpCooldown) {
+        this.isJumping = true;
+        this.isMoving = true
+        var movementVector = [player.x - this.x, player.y - this.y];
+        this.jumpDir = normalizeVector(movementVector);
       }
-      
+    }
+    
+    // normalize movement
+    if (this.isJumping && this.animationFrame >= 3 && this.animationFrame <= 5) {
+      return this.jumpDir;
+    } else {
+      return [0, 0];
     }
   }
 
@@ -70,6 +78,7 @@ class Slime {
         this.animationFrame = 1;
         this.animationTime = 0;
         this.currentJumpTimer = 0;
+        this.isJumping = false;
       }
     }
   }

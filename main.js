@@ -26,8 +26,8 @@ var audios = {
 
 var size = { // important sizes
   // tile count in each direction
-  x: 16,
-  y: 9,
+  x: 20,
+  y: 10,
   tilesize: undefined,
   // top left tile offset from top left corner
   offset_x: undefined,
@@ -42,10 +42,7 @@ var player = {
   moveSpeed: 3 / fps,
   coins: 0
 };
-var enemies = [
-  new Slime(size.x/2 + 2, size.y/2 + 2),
-  new Slime(random(0, size.x), random(0, size.y))
-];
+var enemies = [];
 var drawables = [];
 var world = [];
 
@@ -144,14 +141,26 @@ function setupWorld(size) {
       ground: new Ground("stone", false),
       tile: undefined
     };
-    if (chance(10)) {
-      world[i][j].tile = new Coin();
-    }
-    if (chance(10)) {
-      world[i][j].tile = new Box();
-    }
 
+    if (distance(player.x, player.y, i, j) > 2) {
+      if (chance(15)) {
+        world[i][j].tile = new Coin();
+      }
+      if (j == 0 || i % 2 == 0 && j % 2 == 0 || i % 2 == 0 && j % 2 == 1 && chance(25) || i % 2 == 1 && j % 2 == 0 && chance(25)) {
+        world[i][j].tile = new Box();
+      }
+    }
   }, function(i) {
     world[i] = [];
   });
+
+  var generateEnemyCount = 15;
+  while (generateEnemyCount > 0) {
+    var i = randomInt(0, size.x);
+    var j = randomInt(0, size.y);
+    if (!isSolid(world[i][j].tile) && !isSolid(world[i][j].ground) && distance(player.x, player.y, i, j) > 2) {
+      enemies.push(new Slime(i + 0.5, j + 0.5));
+      generateEnemyCount--
+    }
+  } 
 }

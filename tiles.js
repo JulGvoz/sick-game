@@ -9,7 +9,9 @@ class Coin extends TileEntity {
           player.coins++;
           console.log(player.coins);
           world[i][j].tile = undefined;
-          audios.coin_sound.cloneNode(true).play();
+          var coinSoundCopy = audios.coin_sound.cloneNode(true);
+          coinSoundCopy.volume = 0.3;
+          coinSoundCopy.play();
         }
       },
       false
