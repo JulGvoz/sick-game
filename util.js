@@ -83,3 +83,7 @@ function waitUntil(fnPredicate, fnBody) {
 function randomInt(min, max) {
   return Math.floor(min + Math.random()*(max - min));
 }
+
+function chance(percentage) {
+  return Math.random() < percentage/100;
+}

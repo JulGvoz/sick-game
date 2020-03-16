@@ -17,9 +17,9 @@ var textures = {
   box: new Texture("resources/tile/box.png"),
   void: new Texture("resources/ground/void.png"),
   slime: [new Texture("resources/enemy/slime/explode.png")],
-  main_back: new Texture("resources/gui/main_back.png")
+  main_back: new Texture("resources/gui/main_back.png"),
+  coin: new Texture("resources/tile/coin.png")
 };
-
 
 var size = { // important sizes
   // tile count in each direction
@@ -31,18 +31,19 @@ var size = { // important sizes
   offset_y: undefined
 };
 
-
 var player = {
   x: size.x/2,
   y: size.y/2,
   width: 0.4,
   height: 0.1,
-  moveSpeed: 3 / fps
+  moveSpeed: 3 / fps,
+  coins: 0
 };
 var enemies = [
   new Slime(size.x/2 + 2, size.y/2 + 2)
 ];
 var drawables = [];
+var world = [];
 
 // is run when page finishes loading
 function setup() {
@@ -80,6 +81,14 @@ function loop() {
   for (var i = 0; i < enemies.length; i++) {
     moveEntity(enemies[i], enemies[i].control(), enemies[i].speed);
   }
+  loopWorld(size, function(i, j) {
+    if (isEntity(world[i][j].ground)) {
+      world[i][j].ground.control(i, j);
+    }
+    if (isEntity(world[i][j].tile)) {
+      world[i][j].tile.control(i, j);
+    }
+  });
 
   drawWorld(size);
   drawPlayer();
@@ -123,4 +132,19 @@ function drawPlayer() {
 
 function movePlayer(movementDirection, force) {
   moveEntity(player, movementDirection, force);
+}
+
+function setupWorld(size) {
+  loopWorld(size, function(i, j) {
+    world[i][j] = {
+      ground: new Ground("stone", false),
+      tile: undefined
+    };
+    if (chance(10)) {
+      world[i][j].tile = new Coin();
+    }
+
+  }, function(i) {
+    world[i] = [];
+  });
 }

@@ -98,19 +98,6 @@ class GroundEntity {
   }
 }
 
-var world = [];
-
-function setupWorld(size) {
-  loopWorld(size, function(i, j) {
-    world[i][j] = {
-      ground: new Ground("stone"),
-      tile: undefined
-    };
-  }, function(i) {
-    world[i] = [];
-  });
-}
-
 function drawWorld(size) {
   loopWorld(size, function(i, j) {
     if (world[i][j].ground !== undefined) {
@@ -127,4 +114,11 @@ function isSolid(world_object) {
     return false;
   }
   return world_object.solid;
+}
+
+function isEntity(world_object) {
+  if (world_object === undefined) {
+    return false;
+  }
+  return world_object.entity;
 }
