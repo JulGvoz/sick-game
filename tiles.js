@@ -5,7 +5,7 @@ class Coin extends TileEntity {
         return "coin";
       },
       function(i, j) {
-        if (distance(player.x, player.y, i, j) < 1) {
+        if (distance(player.x, player.y, i + 0.5, j + 0.5) < 0.5) {
           player.coins++;
           console.log(player.coins);
           world[i][j].tile = undefined;
@@ -14,5 +14,11 @@ class Coin extends TileEntity {
       },
       false
     );
+  }
+}
+
+class Box extends Tile {
+  constructor() {
+    super("box", true);
   }
 }

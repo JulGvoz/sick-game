@@ -43,7 +43,8 @@ var player = {
   coins: 0
 };
 var enemies = [
-  new Slime(size.x/2 + 2, size.y/2 + 2)
+  new Slime(size.x/2 + 2, size.y/2 + 2),
+  new Slime(random(0, size.x), random(0, size.y))
 ];
 var drawables = [];
 var world = [];
@@ -145,6 +146,9 @@ function setupWorld(size) {
     };
     if (chance(10)) {
       world[i][j].tile = new Coin();
+    }
+    if (chance(10)) {
+      world[i][j].tile = new Box();
     }
 
   }, function(i) {
