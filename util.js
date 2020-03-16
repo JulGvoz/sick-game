@@ -1,13 +1,3 @@
-function getInputVector(up, left, down, right) {
-  var vector = [0, 0];
-  vector[1] -= 1 ? keys[up] == true: 0;
-  vector[0] -= 1 ? keys[left] == true: 0;
-  vector[1] += 1 ? keys[down] == true: 0;
-  vector[0] += 1 ? keys[right] == true: 0;
-
-  return normalizeVector(vector);
-}
-
 function normalizeVector(vec) {
   if (vectorLength(vec) > 0) {
     return vectorMult(vec, 1/vectorLength(vec));
@@ -38,44 +28,6 @@ function loopWorld(size, fnInner, fnOuter = function(x) {return;}) {
   }
 }
 
-class Texture {
-
-  constructor(file_name, solid = false) {
-      this.file_name = file_name;
-      this.img = new Image();
-      Texture.total_to_load++;
-      this.img.onload = function (event) {
-          Texture.total_loaded++;
-      }
-      this.img.src = this.file_name;
-      this.solid = solid;
-  }
-}
-
-class DrawObject {
-  constructor(img, x, y, sx, sy, z_offset, time) {
-    this.img = img;
-    this.x = x;
-    this.y = y;
-    this.sx = sx;
-    this.sy = sy;
-    this.z_offset = z_offset;
-    this.time = time;
-  }
-
-  draw() {
-    ctx.drawImage(this.img, this.x, this.y, this.sx, this.sy);
-    this.time--;
-  }
-}
-
-function addDrawable(img, x, y, sx, sy, z_offset, time = 1) {
-  drawables.push(new DrawObject(img, x, y, sx, sy, z_offset, time));
-}
-
-Texture.total_loaded = 0;
-Texture.total_to_load = 0;
-
 function rectCollides(x1, y1, w1, h1, x2, y2, w2, h2) {
   return (x1 < x2 + w2 && x1 + w1 > x2 &&
     y1 < y2 + h2 && y1 + h1 > y2) 
@@ -87,8 +39,6 @@ function distance(x1, y1, x2, y2) {
     (y2 - y1)*(y2 - y1)
   );
 }
-
-
 
 function moveEntity(entity, movementDirection, force, it = 5) {
   if (it == 0) {

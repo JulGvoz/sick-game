@@ -45,3 +45,13 @@ function setUpInputTracking(canvas) {
     mousey = event.pageY - canvas.offsetTop;
   });
 }
+
+function getInputVector(up, left, down, right) {
+  var vector = [0, 0];
+  vector[1] -= 1 ? keys[up] == true: 0;
+  vector[0] -= 1 ? keys[left] == true: 0;
+  vector[1] += 1 ? keys[down] == true: 0;
+  vector[0] += 1 ? keys[right] == true: 0;
+
+  return normalizeVector(vector);
+}
