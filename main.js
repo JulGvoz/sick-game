@@ -18,8 +18,11 @@ var textures = {
   void: new Texture("resources/ground/void.png"),
   slime: [new Texture("resources/enemy/slime/explode.png")],
   main_back: new Texture("resources/gui/main_back.png"),
-  coin: new Texture("resources/tile/coin.png")
+  coin: new Texture("resources/tile/coin.png"),
+  valley_vertical: new Texture("resources/ground/valley/valley_vertical.png"),
+  valley_horizontal: new Texture("resources/ground/valley/valley_horizontal.png")
 };
+
 var audios = {
   coin_sound: new Audio("resources/sound/coin.wav")
 };
@@ -138,23 +141,26 @@ function movePlayer(movementDirection, force) {
 function setupWorld(size) {
   loopWorld(size, function(i, j) {
     world[i][j] = {
-      ground: new Ground("stone", false),
+      ground: new Stone(),
       tile: undefined
     };
 
-    if (distance(player.x, player.y, i, j) > 2) {
+    if (distance(player.x, player.y, i, j) > 2 && getProperty(world[i][j].ground, "name") === "stone") {
       if (chance(15)) {
         world[i][j].tile = new Coin();
       }
       if (j == 0 || i % 2 == 0 && j % 2 == 0 || i % 2 == 0 && j % 2 == 1 && chance(25) || i % 2 == 1 && j % 2 == 0 && chance(25)) {
-        world[i][j].tile = new Box();
+        world[i][j].ground = new Valley();
       }
     }
   }, function(i) {
     world[i] = [];
   });
 
-  var generateEnemyCount = 15;
+  world[0][0].ground.filled = true;
+  world[0][0].ground.depth = 0;
+
+  var generateEnemyCount = 5;
   while (generateEnemyCount > 0) {
     var i = randomInt(0, size.x);
     var j = randomInt(0, size.y);
@@ -162,5 +168,5 @@ function setupWorld(size) {
       enemies.push(new Slime(i + 0.5, j + 0.5));
       generateEnemyCount--
     }
-  } 
+  }
 }

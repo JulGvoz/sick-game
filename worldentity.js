@@ -1,6 +1,7 @@
 class Tile {
-  constructor(textureName, solid = false) {
+  constructor(textureName, name, solid = false) {
     this.textureName = textureName
+    this.name = name;
     this.entity = false;
     this.drawable = true;
     this.solid = solid;
@@ -21,12 +22,13 @@ class Tile {
 }
 
 class TileEntity {
-  constructor(drawFn, tickFn, solid = false) {
+  constructor(drawFn, tickFn, name, solid = false) {
     this.tickFn = tickFn;
     this.drawFn = drawFn;
     this.entity = true;
     this.drawable = true;
     this.solid = solid;
+    this.name = name;
   }
 
   control(i, j) {
@@ -40,20 +42,21 @@ class TileEntity {
         this.drawFn()
       ].img,
       size.offset_x + i*size.tilesize,
-      size.offset_y + j*size.tilesize - textures[this.drawFn()].img.height * size.tilesize / textures[this.drawFn()].img.width + size.tilesize,
+      size.offset_y + j*size.tilesize - textures[this.drawFn(i, j)].img.height * size.tilesize / textures[this.drawFn(i, j)].img.width + size.tilesize,
       size.tilesize,
-      size.tilesize * textures[this.drawFn()].img.height / textures[this.drawFn()].img.width,
+      size.tilesize * textures[this.drawFn(i, j)].img.height / textures[this.drawFn(i, j)].img.width,
       j + size.y + 1
     );
   }
 }
 
 class Ground {
-  constructor(textureName, solid = false) {
+  constructor(textureName, name, solid = false) {
     this.textureName = textureName;
     this.entity = false;
     this.drawable = true;
     this.solid = solid;
+    this.name = name;
   }
 
   draw(i, j) {
@@ -71,12 +74,13 @@ class Ground {
 }
 
 class GroundEntity {
-  constructor(drawFn, tickFn, solid = false) {
+  constructor(drawFn, tickFn, name, solid = false) {
     this.tickFn = tickFn;
     this.drawFn = drawFn;
     this.entity = true;
     this.drawable = true;
     this.solid = solid;
+    this.name = name;
   }
 
   control(i, j) {
@@ -87,12 +91,12 @@ class GroundEntity {
   draw(i, j) {
     addDrawable(
       textures[
-        this.drawFn()
+        this.drawFn(i, j)
       ].img,
       size.offset_x + i*size.tilesize,
       size.offset_y + j*size.tilesize,
       size.tilesize,
-      size.tilesize * textures[this.drawFn()].img.height / textures[this.drawFn()].img.width,
+      size.tilesize * textures[this.drawFn(i, j)].img.height / textures[this.drawFn(i, j)].img.width,
       j + 1
     );
   }

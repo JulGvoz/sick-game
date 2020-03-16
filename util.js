@@ -28,6 +28,17 @@ function loopWorld(size, fnInner, fnOuter = function(x) {return;}) {
   }
 }
 
+function loopNeighbours(i, j, context, fn) {
+  for(var x = max(0, i - 1); x <= min(size.x - 1, i + 1); x++) {
+    for(var y = max(0, j - 1); y <= min(size.y - 1, j + 1); y++) {
+      if (x == i && y == j) {
+        continue;
+      }
+      fn(x, y);
+    }
+  }
+}
+
 function rectCollides(x1, y1, w1, h1, x2, y2, w2, h2) {
   return (x1 < x2 + w2 && x1 + w1 > x2 &&
     y1 < y2 + h2 && y1 + h1 > y2) 
@@ -90,4 +101,19 @@ function random(min, max) {
 
 function chance(percentage) {
   return Math.random() < percentage/100;
+}
+
+function getProperty(object, property) {
+  if (object !== undefined) {
+    return object[property];
+  }
+  return undefined;
+}
+
+function min(a, b) {
+  return Math.min(a, b);
+}
+
+function max(a, b) {
+  return Math.max(a, b);
 }
