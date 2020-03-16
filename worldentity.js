@@ -1,8 +1,9 @@
 class Tile {
-  constructor(textureName) {
+  constructor(textureName, solid = false) {
     this.textureName = textureName
     this.entity = false;
     this.drawable = true;
+    this.solid = solid;
   }
 
   draw(i, j) {
@@ -20,11 +21,12 @@ class Tile {
 }
 
 class TileEntity {
-  constructor(drawFn, tickFn) {
+  constructor(drawFn, tickFn, solid = false) {
     this.tickFn = tickFn;
     this.drawFn = drawFn;
     this.entity = true;
     this.drawable = true;
+    this.solid = solid;
   }
 
   control(i, j) {
@@ -47,10 +49,11 @@ class TileEntity {
 }
 
 class Ground {
-  constructor(textureName) {
+  constructor(textureName, solid = false) {
     this.textureName = textureName;
     this.entity = false;
     this.drawable = true;
+    this.solid = solid;
   }
 
   draw(i, j) {
@@ -68,11 +71,12 @@ class Ground {
 }
 
 class GroundEntity {
-  constructor(drawFn, tickFn) {
+  constructor(drawFn, tickFn, solid = false) {
     this.tickFn = tickFn;
     this.drawFn = drawFn;
     this.entity = true;
     this.drawable = true;
+    this.solid = solid;
   }
 
   control(i, j) {
@@ -92,4 +96,35 @@ class GroundEntity {
       j + 1
     );
   }
+}
+
+var world = [];
+
+function setupWorld(size) {
+  loopWorld(size, function(i, j) {
+    world[i][j] = {
+      ground: new Ground("stone"),
+      tile: undefined
+    };
+  }, function(i) {
+    world[i] = [];
+  });
+}
+
+function drawWorld(size) {
+  loopWorld(size, function(i, j) {
+    if (world[i][j].ground !== undefined) {
+      world[i][j].ground.draw(i, j);
+    }
+    if (world[i][j].tile !== undefined) {
+      world[i][j].tile.draw(i, j);
+    }
+  });
+}
+
+function isSolid(world_object) {
+  if (world_object === undefined) {
+    return false;
+  }
+  return world_object.solid;
 }

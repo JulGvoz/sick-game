@@ -88,12 +88,7 @@ function distance(x1, y1, x2, y2) {
   );
 }
 
-function isSolid(texture) {
-  if (texture === undefined) {
-    return false;
-  }
-  return textures[texture].solid;
-}
+
 
 function moveEntity(entity, movementDirection, force, it = 5) {
   if (it == 0) {

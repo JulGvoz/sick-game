@@ -14,8 +14,8 @@ var lastFrame = (new Date()).getTime();
 var textures = {
   stone: new Texture("resources/ground/stone.png"),
   player: new Texture("resources/player/player01.png"),
-  box: new Texture("resources/tile/box.png", true),
-  void: new Texture("resources/ground/void.png", true),
+  box: new Texture("resources/tile/box.png"),
+  void: new Texture("resources/ground/void.png"),
   slime: [new Texture("resources/enemy/slime/explode.png")],
   main_back: new Texture("resources/gui/main_back.png")
 };
@@ -39,8 +39,6 @@ var player = {
   height: 0.1,
   moveSpeed: 3 / fps
 };
-
-var world = [];
 var enemies = [
   new Slime(size.x/2 + 2, size.y/2 + 2)
 ];
@@ -48,14 +46,10 @@ var drawables = [];
 
 // is run when page finishes loading
 function setup() {
-
-
   // load animated textures
   for (var i = 1; i <= 6; i++) {
     textures.slime[i] = new Texture("resources/enemy/slime/0" + i + ".png");
   }
-
-
 
   setUpInputTracking(canvas); // tracks key and mouse inputs.
   /*
@@ -65,20 +59,7 @@ function setup() {
   */
 
   // initialize world
-
-  loopWorld(size, function(i, j) {
-    world[i][j] = {
-      ground: "stone",
-      tile: undefined
-    };
-  }, function(i) {
-    world[i] = [];
-  });
-  /*
-  while (Texture.total_to_load > Texture.total_loaded) {
-    // waiting until everything loads
-  }
-  */
+  setupWorld(size);
 
   waitUntil(function() {
     return Texture.total_to_load == Texture.total_loaded
@@ -100,10 +81,8 @@ function loop() {
     moveEntity(enemies[i], enemies[i].control(), enemies[i].speed);
   }
 
-  drawGround();
-  drawTile(0, player.y);
+  drawWorld(size);
   drawPlayer();
-  drawTile(Math.ceil(player.y), size.y);
   drawSlimes();
   addDrawable(textures.main_back.img, 0, 0, canvas.width, canvas.height, 5*size.y);
   
@@ -116,59 +95,20 @@ function loop() {
   ctx.fillStyle = "#282828";
   ctx.fill(); 
 
-  for (var i = 0; i < drawables.length; i++) {
-    drawables[i].draw();
-  }
+  drawables.forEach(function(val) {
+    val.draw();
+  });
 
   drawables = drawables.filter(function(val) {
     return val.time > 0;
-  })
+  });
   
   enemies = enemies.filter(function(val) {
     return !val.death;
   });
-
-  if (frames % 30 == 0) {
-    world[randomInt(0, size.x)][randomInt(0, size.y)].tile = "box";
-  }
-  
   
   lastFrame = (new Date()).getTime();
   frames++;
-}
-
-function drawGround() {
-  loopWorld(size, function(i, j) {
-    addDrawable(
-      textures[
-        world[i][j].ground
-      ].img,
-      size.offset_x + i*size.tilesize,
-      size.offset_y + j*size.tilesize,
-      size.tilesize,
-      size.tilesize * textures[world[i][j].ground].img.height / textures[world[i][j].ground].img.width,
-      j + 1
-    );
-  });
-}
-
-function drawTile(start, end) {
-  for (var j = start; j < end; j++) {
-    for (var i = 0; i < size.x; i++) {
-      if (world[i][j].tile) {
-        addDrawable(
-        textures[
-          world[i][j].tile
-        ].img,
-        size.offset_x + i*size.tilesize,
-        size.offset_y + j*size.tilesize - textures[world[i][j].tile].img.height * size.tilesize / textures[world[i][j].tile].img.width + size.tilesize,
-        size.tilesize,
-        size.tilesize * textures[world[i][j].tile].img.height / textures[world[i][j].tile].img.width,
-        j + size.y + 1
-        );
-      }
-    }
-  }
 }
 
 function drawPlayer() {
