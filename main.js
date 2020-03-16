@@ -20,6 +20,9 @@ var textures = {
   main_back: new Texture("resources/gui/main_back.png"),
   coin: new Texture("resources/tile/coin.png")
 };
+var audios = {
+  coin_sound: new Audio("resources/sound/coin.wav")
+};
 
 var size = { // important sizes
   // tile count in each direction
