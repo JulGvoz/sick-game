@@ -36,34 +36,43 @@ class Valley extends GroundEntity {
   constructor() {
     super(
       function(i, j) {
+        var s = "";
+        if (this.filled) {
+          s = "_water";
+        }
         if (j == 0 || getProperty(world[i][j - 1].ground, "name") == "stone") {
-          return "valley_horizontal";
+          return "valley_horizontal" + s;
         } else {
-          return "valley_vertical";
+          return "valley_vertical" + s;
         }
       },
       function(i, j) {
-        var hasSource = this.filled && (this.depth == 0);
+        var self = this;
+        var hasSource = self.filled && (self.depth == 0);
         loopNeighbours(i, j, function(x, y) { // check neighbours if water flows into this valley
           if (getProperty(world[x][y].ground, "name") == "valley") {
-            hasSource = hasSource || (world[x][y].ground.filled && world[x][y].ground.depth < this.depth);
+            hasSource = hasSource || (world[x][y].ground.filled && world[x][y].ground.depth < self.depth);
           }
         });
 
         if (hasSource) { // can only spread water if water is coming in
-          loopNeighbours(i, j, function(x, y) { 
-            console.log(i, j, x, y);
-            if (getProperty(world[x][y].ground, "name") == "valley") {
-              if (!world[x][y].ground.filled || (world[x][y].ground.filled && world[x][y].depth > this.depth + 1)) {
-                world[x][y].ground.filled = true;
-                world[x][y].ground.depth = this.depth + 1;
-                world[x][y].ground.tickFn(x, y);
+          this.solid = true;
+          //console.log(this);
+          //debugger;
+          loopNeighbours(i, j, 
+            function(x, y) { 
+              if (getProperty(world[x][y].ground, "name") == "valley") {
+                if (!world[x][y].ground.filled || (world[x][y].ground.filled && world[x][y].depth > self.depth + 1)) {
+                  world[x][y].ground.filled = true;
+                  world[x][y].ground.depth = self.depth + 1;
+                  world[x][y].ground.tickFn(x, y);
+                }
               }
-            }
-          });
+            });
         } else {
           this.filled = false;
           this.depth = -1;
+          this.solid = false;
         }
         return; // todo?
       },

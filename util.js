@@ -28,7 +28,7 @@ function loopWorld(size, fnInner, fnOuter = function(x) {return;}) {
   }
 }
 
-function loopNeighbours(i, j, context, fn) {
+function loopNeighbours(i, j, fn) {
   for(var x = max(0, i - 1); x <= min(size.x - 1, i + 1); x++) {
     for(var y = max(0, j - 1); y <= min(size.y - 1, j + 1); y++) {
       if (x == i && y == j) {

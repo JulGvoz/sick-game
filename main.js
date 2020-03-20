@@ -20,7 +20,9 @@ var textures = {
   main_back: new Texture("resources/gui/main_back.png"),
   coin: new Texture("resources/tile/coin.png"),
   valley_vertical: new Texture("resources/ground/valley/valley_vertical.png"),
-  valley_horizontal: new Texture("resources/ground/valley/valley_horizontal.png")
+  valley_horizontal: new Texture("resources/ground/valley/valley_horizontal.png"),
+  valley_vertical_water: new Texture("resources/ground/valley/valley_vertical_water.png"),
+  valley_horizontal_water: new Texture("resources/ground/valley/valley_horizontal_water.png"),
 };
 
 var audios = {
@@ -146,9 +148,6 @@ function setupWorld(size) {
     };
 
     if (distance(player.x, player.y, i, j) > 2 && getProperty(world[i][j].ground, "name") === "stone") {
-      if (chance(15)) {
-        world[i][j].tile = new Coin();
-      }
       if (j == 0 || i % 2 == 0 && j % 2 == 0 || i % 2 == 0 && j % 2 == 1 && chance(25) || i % 2 == 1 && j % 2 == 0 && chance(25)) {
         world[i][j].ground = new Valley();
       }
@@ -160,6 +159,14 @@ function setupWorld(size) {
   world[0][0].ground.filled = true;
   world[0][0].ground.depth = 0;
 
+  loopWorld(size, function(i, j) {
+    if (distance(player.x, player.y, i, j) > 2 && getProperty(world[i][j].ground, "name") === "stone") {
+      if (chance(15)) {
+        world[i][j].tile = new Coin();
+      }
+    }
+  });
+
   var generateEnemyCount = 5;
   while (generateEnemyCount > 0) {
     var i = randomInt(0, size.x);
@@ -170,3 +177,81 @@ function setupWorld(size) {
     }
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+// world is array of Valleys
+// size is world's dimensions
+
+var world = [];
+var size = 3;
+
+class GroundEntity {
+  constructor(tickFn) {
+    this.tickFn = tickFn;
+  }
+
+  control(i) {
+    this.tickFn(i);
+  }
+}
+
+class Valley extends GroundEntity {
+  constructor() {
+    super(
+      function(i) {
+          loop(i, function(x) { 
+              if (world[x].depth > this.depth + 1) {
+                world[x].depth = this.depth + 1;
+                world[x].tickFn(x);
+              }
+          });
+      }
+    );
+
+    this.depth = -1;
+  }
+}
+
+function loop(i, fn) {
+  for(var x = Math.max(0, i - 1); x <= Math.min(size - 1, i + 1); x++) {
+      if (x == i) {
+        continue;
+      }
+      fn(x);
+  }
+}
+
+for (var i = 0; i < size; i++) {
+  world[i] = new Valley();
+}
+
+world[0].depth = 0;
+world[0].tickFn(0);
+*/
