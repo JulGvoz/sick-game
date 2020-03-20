@@ -121,6 +121,19 @@ function loop() {
   enemies = enemies.filter(function(val) {
     return !val.death;
   });
+
+  if (frames % 5 == 0) {
+    var randomWorldCell = {
+      x: randomInt(0, size.x),
+      y: randomInt(1, size.y)
+    };
+    
+    if (getProperty(world[randomWorldCell.x][randomWorldCell.y].ground, "name") == "valley") {
+      world[randomWorldCell.x][randomWorldCell.y].ground = new Stone();
+    } else if (getProperty(world[randomWorldCell.x][randomWorldCell.y].ground, "name") == "stone") {
+      world[randomWorldCell.x][randomWorldCell.y].ground = new Valley();
+    }
+  }
   
   lastFrame = (new Date()).getTime();
   frames++;
@@ -171,7 +184,7 @@ function setupWorld(size) {
   while (generateEnemyCount > 0) {
     var i = randomInt(0, size.x);
     var j = randomInt(0, size.y);
-    if (!isSolid(world[i][j].tile) && !isSolid(world[i][j].ground) && distance(player.x, player.y, i, j) > 2) {
+    if (!isSolid(world[i][j].tile) && !isSolid(world[i][j].ground) && distance(player.x, player.y, i, j) > 2 && getProperty(world[i][j].ground, "name") != "valley") {
       enemies.push(new Slime(i + 0.5, j + 0.5));
       generateEnemyCount--
     }
