@@ -39,6 +39,19 @@ function loopNeighbours(i, j, fn) {
   }
 }
 
+function loopCardinalNeighbours(i, j, fn) {
+  for(var x = max(0, i - 1); x <= min(size.x - 1, i + 1); x++) {
+    for(var y = max(0, j - 1); y <= min(size.y - 1, j + 1); y++) {
+      if (x == i && y == j) {
+        continue;
+      }
+      if (i == x || j == y) {
+        fn(x, y);
+      }
+    }
+  }
+}
+
 function rectCollides(x1, y1, w1, h1, x2, y2, w2, h2) {
   return (x1 < x2 + w2 && x1 + w1 > x2 &&
     y1 < y2 + h2 && y1 + h1 > y2) 

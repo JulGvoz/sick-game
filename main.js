@@ -122,7 +122,7 @@ function loop() {
     return !val.death;
   });
 
-  if (frames % 5 == 0) {
+  if (frames % 15 == 0) {
     var randomWorldCell = {
       x: randomInt(0, size.x),
       y: randomInt(1, size.y)

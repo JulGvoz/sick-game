@@ -28,8 +28,30 @@ class DrawObject {
   }
 }
 
+class TextDrawObject extends DrawObject {
+  constructor(text, color, x, y, sx, sy, z_offset, time = 1) {
+    super(undefined, x, y, sx, sy, z_offset, time);
+    // debugger;
+    this.color = color;
+
+    this.text = text;
+  }
+
+  draw() {
+    // console.log(this.text)
+    
+    ctx.font = Math.floor(this.sy) + "px Arial";
+    ctx.fillStyle = this.color;
+    ctx.fillText(this.text, this.x, this.y, this.sx);
+  }
+}
+
 function addDrawable(img, x, y, sx, sy, z_offset, time = 1) {
   drawables.push(new DrawObject(img, x, y, sx, sy, z_offset, time));
+}
+
+function addCustomDrawable(drawable) {
+  drawables.push(drawable);
 }
 
 Texture.total_loaded = 0;

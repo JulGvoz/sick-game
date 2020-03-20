@@ -49,7 +49,7 @@ class Valley extends GroundEntity {
       function(i, j) {
         var self = this;
         var hasSource = self.filled && (self.depth == 0);
-        loopNeighbours(i, j, function(x, y) { // check neighbours if water flows into this valley
+        loopCardinalNeighbours(i, j, function(x, y) { // check neighbours if water flows into this valley
           if (getProperty(world[x][y].ground, "name") == "valley") {
             hasSource = hasSource || (world[x][y].ground.filled && world[x][y].ground.depth < self.depth);
           }
@@ -59,7 +59,7 @@ class Valley extends GroundEntity {
           this.solid = true;
           //console.log(this);
           //debugger;
-          loopNeighbours(i, j, 
+          loopCardinalNeighbours(i, j, 
             function(x, y) { 
               if (getProperty(world[x][y].ground, "name") == "valley") {
                 if (!world[x][y].ground.filled || (world[x][y].ground.filled && world[x][y].depth > self.depth + 1)) {
@@ -74,6 +74,7 @@ class Valley extends GroundEntity {
           this.depth = -1;
           this.solid = false;
         }
+
         return; // todo?
       },
       "valley",
