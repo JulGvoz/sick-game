@@ -37,7 +37,7 @@ class Valley extends GroundEntity {
     super(
       function(i, j) {
         var s = "";
-        if (this.filled) {
+        if (this.depth > -1) {
           s = "_water";
         }
         if (j == 0 || getProperty(world[i][j - 1].ground, "name") == "stone") {
@@ -48,10 +48,10 @@ class Valley extends GroundEntity {
       },
       function(i, j) {
         var self = this;
-        var hasSource = self.filled && (self.depth == 0);
+        var hasSource = self.depth == 0;
         loopCardinalNeighbours(i, j, function(x, y) { // check neighbours if water flows into this valley
           if (getProperty(world[x][y].ground, "name") == "valley") {
-            hasSource = hasSource || (world[x][y].ground.filled && world[x][y].ground.depth < self.depth);
+            hasSource = hasSource || (world[x][y].ground.depth + 1 == self.depth);
           }
         });
 
@@ -62,15 +62,13 @@ class Valley extends GroundEntity {
           loopCardinalNeighbours(i, j, 
             function(x, y) { 
               if (getProperty(world[x][y].ground, "name") == "valley") {
-                if (!world[x][y].ground.filled || (world[x][y].ground.filled && world[x][y].depth > self.depth + 1)) {
-                  world[x][y].ground.filled = true;
+                if (world[x][y].ground.depth == -1 || (world[x][y].ground.depth > self.depth + 1)) {
                   world[x][y].ground.depth = self.depth + 1;
                   world[x][y].ground.tickFn(x, y);
                 }
               }
             });
         } else {
-          this.filled = false;
           this.depth = -1;
           this.solid = false;
         }
@@ -80,8 +78,6 @@ class Valley extends GroundEntity {
       "valley",
       false
     );
-
-    this.filled = false;
     this.depth = -1;
   }
 }

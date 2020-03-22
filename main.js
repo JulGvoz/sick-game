@@ -122,7 +122,7 @@ function loop() {
     return !val.death;
   });
 
-  if (frames % 15 == 0) {
+  if (frames % Math.floor(player.x + 2) == 0) {
     var randomWorldCell = {
       x: randomInt(0, size.x),
       y: randomInt(1, size.y)
@@ -169,7 +169,6 @@ function setupWorld(size) {
     world[i] = [];
   });
 
-  world[0][0].ground.filled = true;
   world[0][0].ground.depth = 0;
 
   loopWorld(size, function(i, j) {
